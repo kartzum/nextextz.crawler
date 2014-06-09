@@ -19,4 +19,11 @@ public interface Resource {
      * @return location.
      */
     ResourceLocation getResourceLocation();
+
+    /**
+     * Returns all locations.
+     *
+     * @return locations.
+     */
+    Iterable<ResourceLocation> getResourceLocations();
 }

@@ -36,11 +36,13 @@ public final class BasicFactory {
     /**
      * Returns new resource.
      *
-     * @param resourceLocation location.
-     * @param text             text.
+     * @param resourceLocation  location.
+     * @param text              text.
+     * @param resourceLocations locations.
      * @return new resource.
      */
-    public static Resource createResource(ResourceLocation resourceLocation, Text text) {
-        return new BasicResource(resourceLocation, text);
+    public static Resource createResource(
+            ResourceLocation resourceLocation, Text text, Iterable<ResourceLocation> resourceLocations) {
+        return new BasicResource(resourceLocation, text, resourceLocations);
     }
 }

@@ -6,7 +6,6 @@ import nextextz.crawler.pack.ResourceLocation;
 import nextextz.crawler.pack.basic.BasicCrawlerHandler;
 import nextextz.crawler.pack.basic.BasicFactory;
 import nextextz.text.pack.lexer.HtmlLexer;
-import nextextz.text.pack.lexer.HtmlLexerHandler;
 
 public class BasicCrawlerExecutor {
     public static void main(String[] args) {
@@ -21,14 +20,16 @@ public class BasicCrawlerExecutor {
 
     private static class BasicCrawlerHandlerConsole implements BasicCrawlerHandler {
         @Override
-        public void handle(Resource resource) {
-            final HtmlLexerHandlerConsole handler = new HtmlLexerHandlerConsole();
-            final HtmlLexer lexer = new HtmlLexer(resource.getText(), handler);
-            for (; ; ) {
-                lexer.execute();
-                if (!handler.next()) {
-                    break;
-                }
+        public void handleStart(ResourceLocation resourceLocation) {
+            System.out.println("Start: " + resourceLocation.getLocation());
+        }
+
+        @Override
+        public void handleFinish(Resource resource) {
+            System.out.println("Finish: " + resource.getResourceLocation().getLocation());
+            System.out.println("Links:");
+            for (ResourceLocation resourceLocation : resource.getResourceLocations()) {
+                System.out.println(resourceLocation.getLocation());
             }
         }
 
@@ -36,31 +37,15 @@ public class BasicCrawlerExecutor {
         public void handleException(Exception exception) {
             exception.printStackTrace();
         }
-    }
-
-    private static class HtmlLexerHandlerConsole implements HtmlLexerHandler {
-        private HtmlLexer.Token tail;
 
         @Override
         public void handle(HtmlLexer.Token token) {
-            tail = token;
-
             if (token.getType() == HtmlLexer.TokenType.CONTENT) {
                 final String value = token.getValue().trim();
                 if (value.length() > 0) {
                     System.out.println(token.getValue());
                 }
             }
-        }
-
-        public boolean next() {
-            boolean result = true;
-            if (tail != null) {
-                if (tail.getType() == HtmlLexer.TokenType.EMPTY) {
-                    result = false;
-                }
-            }
-            return result;
         }
     }
 }
